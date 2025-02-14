@@ -1,3 +1,6 @@
+import os
+os.environ["TF_ENABLE_ONEDNN_OPTS"] = "0"
+
 import flwr
 from flwr.server import start_server
 from config import DEVICE, history, SERVER_ADDRESS, fit_config, fit_metrics_aggregation_fn, fraction_fit, fraction_evaluate, min_fit_clients, min_evaluate_clients, min_available_clients

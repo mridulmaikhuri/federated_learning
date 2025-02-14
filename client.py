@@ -1,3 +1,6 @@
+import os
+os.environ["TF_ENABLE_ONEDNN_OPTS"] = "0"
+
 from collections import OrderedDict
 from typing import List
 import numpy as np
