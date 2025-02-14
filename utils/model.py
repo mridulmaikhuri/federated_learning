@@ -1,12 +1,6 @@
 import torch.nn as nn
 import torch.nn.functional as F
 import torch
-import torchvision
-import torchvision.transforms as transforms
-import numpy as np
-import torch.nn.functional as F
-import torch.optim as optim
-from torch.utils.data import DataLoader
 
 DEVICE = "cpu"
 
@@ -30,7 +24,7 @@ class Net(nn.Module):
         x = self.fc3(x)
         return x
     
-def train(net, trainloader, verbose=False):    
+def train(net, trainloader):    
     criterion = torch.nn.CrossEntropyLoss()
     optimizer = torch.optim.Adam(net.parameters())
     net.train()
@@ -38,8 +32,9 @@ def train(net, trainloader, verbose=False):
     correct, total, train_loss = 0, 0, 0.0
 
     for batch in trainloader:
-        images, labels = batch  # Unpack tuple instead of using dictionary keys
+        images, labels = batch  
         images, labels = images.to(DEVICE), labels.to(DEVICE)
+
         optimizer.zero_grad()
         outputs = net(images)
 
@@ -66,14 +61,14 @@ def test(net, testloader):
     
     with torch.no_grad():
         for batch in testloader:
-            images, labels = batch  # Unpack tuple instead of using dictionary keys
+            images, labels = batch  
             images, labels = images.to(DEVICE), labels.to(DEVICE)
+
             outputs = net(images)
 
             val_loss += criterion(outputs, labels).item()
-            _, predicted = torch.max(outputs.data, 1)
             total += labels.size(0)
-            correct += (predicted == labels).sum().item()
+            correct += (torch.max(outputs.data, 1)[1] == labels).sum().item()
             
     val_loss /= len(testloader.dataset)
     val_accuracy = correct / total
